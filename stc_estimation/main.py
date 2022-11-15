@@ -12,6 +12,10 @@ parser.add_argument('--data-path', default='../data/',
                     help='path to datasets, holidays, and intersection names')
 parser.add_argument('--out-path', default='./outs/',
                     help='path to where the results be saved')
+parser.add_argument('--start-date', default='2021-10-01',
+                    help='start date for the analysis period')
+parser.add_argument('--end-date', default='2022-09-30',
+                    help='end date for the analysis period')
 parser.add_argument('--Max15min', type=int, default=100,
                     help='hard cap value for 15min counts')
 parser.add_argument('--Max24h', type=int, default=500,
@@ -36,6 +40,7 @@ path_to_intersection_names = args.data_path + dataset_name + '_intersections.csv
 path_to_holidays           = args.data_path + dataset_name + '_holidays.csv'
 path_to_outs               = args.out_path
 
+start_date, end_date       = args.start_date, args.end_date
 H15, H24, T24              = args.Max15min, args.Max24h, args.Min24h
 stc_num, repeat            = args.stc_num, args.repeat
 nth_percentile             = args.percentile
@@ -46,7 +51,11 @@ def main():
     # load data 
     valid_intersections = pd.read_csv(path_to_intersection_names).values.reshape(-1)
     holidays = pd.read_csv(path_to_holidays).values.reshape(-1)
-    data = utils.load_transform(path_to_dataset)
+    data = utils.load_transform(path_to_dataset,
+                                start_date = start_date, 
+                                end_date = end_date, 
+                                drop = True, 
+                                verbos = verbos)
 
 
     int_counter = 0
